@@ -1,6 +1,6 @@
 ---
 id: PHR-003-20260101
-title: Phase I Implementation Complete
+title: Phase One Implementation Complete
 stage: green
 date: 2026-01-01T15:05:15.644Z
 surface: Copilot CLI

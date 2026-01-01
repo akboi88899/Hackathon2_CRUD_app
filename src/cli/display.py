@@ -41,13 +41,13 @@ class Display:
     
     def _format_task_list_rich(self, tasks: List[Task]) -> None:
         """Format task list using rich library."""
-        table = Table(title=f"Tasks ({len(tasks)} total)")
+        table = Table(title=f"All Tasks ({len(tasks)} total)", title_style="bright_blue")
         
-        table.add_column("ID", style="cyan", no_wrap=True)
-        table.add_column("Title", style="white")
-        table.add_column("Description", style="dim")
+        table.add_column("ID", style="magenta", no_wrap=True)
+        table.add_column("Title", style="bright_white")
+        table.add_column("Description", style="default")
         table.add_column("Status", justify="center")
-        table.add_column("Created", style="dim")
+        table.add_column("Created", style="default")
         
         for task in tasks:
             status = self.format_status(task.completed)
@@ -86,6 +86,8 @@ class Display:
         Returns:
             Status indicator (✓ or ✗)
         """
+        if RICH_AVAILABLE:
+            return "[bright_green]✓[/bright_green]" if completed else "[bright_red]✗[/bright_red]"
         return "✓" if completed else "✗"
     
     def show_success(self, message: str) -> None:
@@ -96,7 +98,7 @@ class Display:
             message: Success message to display
         """
         if RICH_AVAILABLE:
-            self.console.print(f"[green]✓[/green] {message}")
+            self.console.print(f"[bright_green]✓[/bright_green] {message}")
         else:
             print(f"✓ {message}")
     
@@ -109,7 +111,7 @@ class Display:
             reason: Specific reason for the error
         """
         if RICH_AVAILABLE:
-            self.console.print(f"[red]✗ {error_type}:[/red] {reason}")
+            self.console.print(f"[bright_red]✗ {error_type}:[/bright_red] {reason}")
         else:
             print(f"✗ {error_type}: {reason}")
     
@@ -132,14 +134,14 @@ class Display:
             title: The duplicate title
         """
         if RICH_AVAILABLE:
-            self.console.print(f"[yellow]⚠[/yellow] Warning: A task with title '{title}' already exists.")
+            self.console.print(f"[yellow]⚠ Warning:[/yellow] A task with title '{title}' already exists.")
         else:
             print(f"⚠ Warning: A task with title '{title}' already exists.")
     
     def show_empty_list(self) -> None:
         """Display message when no tasks exist."""
         if RICH_AVAILABLE:
-            self.console.print("[dim]No tasks found. Use 'add' to create your first task.[/dim]")
+            self.console.print("[bright_black]No tasks found. Use 'add' to create your first task.[/bright_black]")
         else:
             print("No tasks found. Use 'add' to create your first task.")
     
@@ -151,6 +153,6 @@ class Display:
             message: Info message to display
         """
         if RICH_AVAILABLE:
-            self.console.print(f"[blue]ℹ[/blue] {message}")
+            self.console.print(f"[bright_cyan]ℹ[/bright_cyan] {message}")
         else:
             print(f"ℹ {message}")

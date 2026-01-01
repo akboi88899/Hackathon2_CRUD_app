@@ -22,7 +22,7 @@ def main():
     handler = CommandHandler(service, display, sort_manager)
     
     print("=" * 60)
-    print("Todo Application - Phase I (In-Memory Console)")
+    print("Todo Application - Phase One (In-Memory Console)")
     print("=" * 60)
     print("\nWelcome! This is an in-memory task management application.")
     print("All data will be lost when you exit the application.")

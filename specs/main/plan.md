@@ -140,7 +140,7 @@ All complexity is justified within Phase I scope and Master Constitution complia
 
 ## High-Level Architecture
 
-### Component Diagram (Text-Based)
+### Component Diagram (Text-only)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
