@@ -1,6 +1,6 @@
 ---
 id: PHR-001-20260101
-title: Phase One Planning Todo Console App
+title: Phase I Planning Todo Console App
 stage: plan
 date: 2026-01-01T14:22:13.797Z
 surface: Copilot CLI

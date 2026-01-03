@@ -1,6 +1,6 @@
 ---
 id: PHR-002
-title: generate-tasks-phase-one-todo
+title: generate-tasks-phase-i-todo
 stage: tasks
 date: 2026-01-01T15:00:21.348Z
 surface: GitHub Copilot CLI
