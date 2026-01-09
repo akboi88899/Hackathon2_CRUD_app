@@ -97,7 +97,12 @@ async def create_task(
         user_id=user_id,
         title=task_data.title.strip(),
         description=task_data.description.strip() if task_data.description else "",
-        deadline=task_data.deadline
+        deadline=task_data.deadline,
+        is_recurring=task_data.is_recurring or False,
+        recurrence_type=task_data.recurrence_type,
+        recurrence_interval=task_data.recurrence_interval,
+        recurrence_days=task_data.recurrence_days,
+        recurrence_end_date=task_data.recurrence_end_date
     )
     
     db.add(new_task)

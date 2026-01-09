@@ -48,6 +48,34 @@ class Task(SQLModel, table=True):
         description="Task deadline (optional, UTC)"
     )
     
+    is_recurring: bool = Field(
+        default=False,
+        description="Whether task repeats"
+    )
+    
+    recurrence_type: Optional[str] = Field(
+        default=None,
+        max_length=20,
+        description="Recurrence pattern: daily, weekly, monthly"
+    )
+    
+    recurrence_interval: Optional[int] = Field(
+        default=None,
+        description="Interval for recurrence (e.g., every 2 weeks)"
+    )
+    
+    recurrence_days: Optional[str] = Field(
+        default=None,
+        max_length=50,
+        description="Specific days for weekly recurrence (e.g., 'Mon,Wed,Fri')"
+    )
+    
+    recurrence_end_date: Optional[datetime] = Field(
+        default=None,
+        nullable=True,
+        description="When to stop recurring (optional)"
+    )
+    
     created_at: datetime = Field(
         default_factory=datetime.utcnow,
         description="Creation timestamp (UTC)"
@@ -66,6 +94,11 @@ class TaskCreate(SQLModel):
     title: str = Field(min_length=1, max_length=200)
     description: Optional[str] = Field(default="", max_length=1000)
     deadline: Optional[datetime] = None
+    is_recurring: Optional[bool] = False
+    recurrence_type: Optional[str] = None
+    recurrence_interval: Optional[int] = 1
+    recurrence_days: Optional[str] = None
+    recurrence_end_date: Optional[datetime] = None
 
 
 class TaskUpdate(SQLModel):
@@ -73,6 +106,11 @@ class TaskUpdate(SQLModel):
     title: Optional[str] = Field(None, min_length=1, max_length=200)
     description: Optional[str] = Field(None, max_length=1000)
     deadline: Optional[datetime] = None
+    is_recurring: Optional[bool] = None
+    recurrence_type: Optional[str] = None
+    recurrence_interval: Optional[int] = None
+    recurrence_days: Optional[str] = None
+    recurrence_end_date: Optional[datetime] = None
 
 
 class TaskRead(SQLModel):
@@ -83,5 +121,10 @@ class TaskRead(SQLModel):
     description: str
     completed: bool
     deadline: Optional[datetime]
+    is_recurring: bool
+    recurrence_type: Optional[str]
+    recurrence_interval: Optional[int]
+    recurrence_days: Optional[str]
+    recurrence_end_date: Optional[datetime]
     created_at: datetime
     updated_at: datetime

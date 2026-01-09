@@ -7,6 +7,7 @@ import { Task, TaskCreate, TaskUpdate, FilterType, SortType } from '@/types/task
 import ProtectedRoute from '@/components/ProtectedRoute';
 import TaskList from '@/components/TaskList';
 import TaskForm from '@/components/TaskForm';
+import Footer from '@/components/Footer';
 
 export default function TasksPage() {
   const { user, logout } = useAuth();
@@ -106,94 +107,112 @@ export default function TasksPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50">
-        <header className="bg-white shadow">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className="min-h-screen relative">
+        {/* Jungle Header */}
+        <header className="glass-effect sticky top-0 z-40 border-b-2 border-[var(--jungle-light)] animate-slideIn">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
             <div className="flex justify-between items-center">
-              <h1 className="text-3xl font-bold text-gray-900">My Tasks</h1>
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-gray-600">{user?.email}</span>
+              <div className="flex items-center gap-3">
+                <span className="text-5xl animate-float">🌳</span>
+                <div>
+                  <h1 className="text-3xl font-bold bg-gradient-to-r from-[var(--jungle-dark)] to-[var(--jungle-secondary)] bg-clip-text text-transparent">
+                    My Jungle Tasks
+                  </h1>
+                  <p className="text-sm text-[var(--jungle-secondary)]">Grow your productivity 🌱</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-medium text-[var(--jungle-dark)] px-4 py-2 rounded-full bg-white shadow-sm">
+                  👤 {user?.email}
+                </span>
                 <button
                   onClick={() => window.location.href = '/profile'}
-                  className="px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                  className="px-5 py-2 text-sm font-semibold text-[var(--jungle-secondary)] hover:bg-white rounded-xl transition-all hover:shadow-md"
                 >
-                  Profile
+                  📋 Profile
                 </button>
                 <button
                   onClick={logout}
-                  className="px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded transition-colors"
+                  className="px-5 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 rounded-xl transition-all hover:shadow-md"
                 >
-                  Logout
+                  🚪 Logout
                 </button>
               </div>
             </div>
           </div>
         </header>
 
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
           {error && (
-            <div className="mb-4 p-4 bg-red-50 text-red-600 rounded-md">
-              {error}
+            <div className="mb-6 jungle-card p-4 bg-gradient-to-r from-red-50 to-red-100 border-2 border-red-200 animate-slideIn">
+              <span className="text-red-700 font-semibold flex items-center gap-2">
+                <span>⚠️</span> {error}
+              </span>
             </div>
           )}
 
-          <div className="mb-6 flex flex-wrap gap-4 items-center">
-            <button
-              onClick={() => setShowForm(true)}
-              className="px-6 py-2 bg-primary text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
-            >
-              + New Task
-            </button>
-
-            <div className="flex gap-2 items-center">
-              <label htmlFor="filter" className="text-sm font-medium text-gray-700">
-                Filter:
-              </label>
-              <select
-                id="filter"
-                value={filter}
-                onChange={(e) => setFilter(e.target.value as FilterType)}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+          {/* Controls */}
+          <div className="mb-8 jungle-card p-6 animate-fadeIn">
+            <div className="flex flex-wrap gap-4 items-center">
+              <button
+                onClick={() => setShowForm(true)}
+                className="jungle-button flex items-center gap-2"
               >
-                <option value="all">All Tasks</option>
-                <option value="incomplete">Incomplete</option>
-                <option value="complete">Complete</option>
-                <option value="overdue">Overdue</option>
-                <option value="upcoming">Due Soon (24h)</option>
-                <option value="no-deadline">No Deadline</option>
-              </select>
-            </div>
+                <span className="text-xl">➕</span>
+                <span>New Task</span>
+              </button>
 
-            <div className="flex gap-2 items-center">
-              <label htmlFor="sort" className="text-sm font-medium text-gray-700">
-                Sort:
-              </label>
-              <select
-                id="sort"
-                value={sort}
-                onChange={(e) => setSort(e.target.value as SortType)}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-              >
-                <option value="created_desc">Newest First</option>
-                <option value="created_asc">Oldest First</option>
-                <option value="title_asc">Title (A-Z)</option>
-                <option value="title_desc">Title (Z-A)</option>
-                <option value="status">Status (Incomplete First)</option>
-                <option value="deadline_asc">Deadline (Earliest)</option>
-                <option value="deadline_desc">Deadline (Latest)</option>
-              </select>
-            </div>
+              <div className="flex gap-2 items-center">
+                <label htmlFor="filter" className="text-sm font-bold text-[var(--jungle-dark)] flex items-center gap-1">
+                  <span>🔍</span> Filter:
+                </label>
+                <select
+                  id="filter"
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value as FilterType)}
+                  className="jungle-input"
+                >
+                  <option value="all">🌍 All Tasks</option>
+                  <option value="incomplete">⏳ Incomplete</option>
+                  <option value="complete">✅ Complete</option>
+                  <option value="overdue">⚠️ Overdue</option>
+                  <option value="upcoming">🔔 Due Soon (24h)</option>
+                  <option value="no-deadline">📌 No Deadline</option>
+                </select>
+              </div>
 
-            <input
-              type="text"
-              placeholder="Search tasks..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="flex-1 min-w-[200px] px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-            />
+              <div className="flex gap-2 items-center">
+                <label htmlFor="sort" className="text-sm font-bold text-[var(--jungle-dark)] flex items-center gap-1">
+                  <span>⬇️</span> Sort:
+                </label>
+                <select
+                  id="sort"
+                  value={sort}
+                  onChange={(e) => setSort(e.target.value as SortType)}
+                  className="jungle-input"
+                >
+                  <option value="created_desc">🆕 Newest First</option>
+                  <option value="created_asc">📅 Oldest First</option>
+                  <option value="title_asc">🔤 Title (A-Z)</option>
+                  <option value="title_desc">🔤 Title (Z-A)</option>
+                  <option value="status">⭐ Status (Incomplete First)</option>
+                  <option value="deadline_asc">⏰ Deadline (Earliest)</option>
+                  <option value="deadline_desc">⏰ Deadline (Latest)</option>
+                </select>
+              </div>
+
+              <input
+                type="text"
+                placeholder="🔎 Search tasks..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="flex-1 min-w-[200px] jungle-input"
+              />
+            </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6">
+          {/* Task List */}
+          <div className="jungle-card p-6">
             <TaskList
               tasks={tasks}
               onToggle={handleToggleTask}
@@ -212,7 +231,17 @@ export default function TasksPage() {
             />
           )}
         </main>
+
+        {/* Floating Decorative Elements */}
+        <div className="fixed bottom-10 right-10 text-6xl animate-float pointer-events-none opacity-20">
+          🍃
+        </div>
+        <div className="fixed top-1/3 left-10 text-4xl animate-float pointer-events-none opacity-20" style={{ animationDelay: '1s' }}>
+          🌿
+        </div>
       </div>
+
+      <Footer />
     </ProtectedRoute>
   );
 }

@@ -5,6 +5,11 @@ export interface Task {
   description: string;
   completed: boolean;
   deadline: string | null;
+  is_recurring: boolean;
+  recurrence_type: 'daily' | 'weekly' | 'monthly' | null;
+  recurrence_interval: number | null;
+  recurrence_days: string | null;
+  recurrence_end_date: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -13,12 +18,22 @@ export interface TaskCreate {
   title: string;
   description?: string;
   deadline?: string | null;
+  is_recurring?: boolean;
+  recurrence_type?: 'daily' | 'weekly' | 'monthly' | null;
+  recurrence_interval?: number;
+  recurrence_days?: string | null;
+  recurrence_end_date?: string | null;
 }
 
 export interface TaskUpdate {
   title?: string;
   description?: string;
   deadline?: string | null;
+  is_recurring?: boolean;
+  recurrence_type?: 'daily' | 'weekly' | 'monthly' | null;
+  recurrence_interval?: number;
+  recurrence_days?: string | null;
+  recurrence_end_date?: string | null;
 }
 
 export interface TasksResponse {
