@@ -18,3 +18,10 @@ python-multipart>=0.0.6
 # Configuration
 pydantic-settings>=2.1.0
 python-dotenv>=1.0.0
+
+# Google ADK for AI Agent
+google-genai>=0.8.0
+google-adk==1.15.0
+
+# AG UI for CopilotKit Integration
+ag-ui-adk==0.3.1

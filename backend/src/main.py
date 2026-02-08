@@ -3,10 +3,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.database import create_db_and_tables
 from src.routes import auth_router, tasks_router, users_router
+from src.routes.adk_agent import router as adk_agent_router
+from src.routes.copilotkit import setup_copilotkit_routes
 
 app = FastAPI(
     title="Todo API",
-    description="Phase II Todo Full-Stack Web Application API",
+    description="Phase II Todo Full-Stack Web Application API with AI Agent",
     version="2.1.0"
 )
 
@@ -21,6 +23,10 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(tasks_router)
 app.include_router(users_router)
+app.include_router(adk_agent_router)
+
+# Setup CopilotKit routes
+setup_copilotkit_routes(app)
 
 
 @app.on_event("startup")
