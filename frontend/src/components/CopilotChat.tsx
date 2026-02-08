@@ -207,7 +207,7 @@ export function CopilotChat() {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setIsOpen(true)}
-            className="fixed bottom-6 right-6 z-50 bg-gradient-to-br from-primary to-secondary p-4 rounded-full shadow-2xl shadow-primary/50 hover:shadow-primary/70 transition-all duration-300"
+            className="fixed bottom-6 right-6 z-50 bg-gradient-to-br from-[var(--jungle-primary)] to-[var(--jungle-secondary)] p-4 rounded-full shadow-2xl shadow-primary/50 hover:shadow-primary/70 transition-all duration-300"
             aria-label="Open AI Assistant"
           >
             <MessageSquare className="w-6 h-6 text-white" />
@@ -221,10 +221,10 @@ export function CopilotChat() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-6 right-6 z-50 w-96 h-[600px] bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 flex flex-col overflow-hidden"
+            className="fixed bottom-6 right-6 z-50 w-96 h-[600px] bg-lime-100 rounded-2xl shadow-2xl border border-slate-800 flex flex-col overflow-hidden"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-primary to-secondary p-4 flex items-center justify-between">
+            <div className="bg-gradient-to-r from-[var(--jungle-primary)] to-[var(--jungle-secondary)] p-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <MessageSquare className="w-5 h-5 text-white" />
                 <h3 className="text-white font-semibold">TaskMaster AI</h3>
@@ -251,7 +251,7 @@ export function CopilotChat() {
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.length === 0 && (
-                <div className="text-center text-slate-400 mt-8">
+                <div className="text-center text-slate-700 mt-8">
                   <p className="text-sm">
                     Hi! I'm your TaskMaster AI assistant.
                   </p>
@@ -274,7 +274,7 @@ export function CopilotChat() {
                   <div
                     className={`max-w-[80%] rounded-2xl px-4 py-2 ${
                       message.role === 'user'
-                        ? 'bg-gradient-to-br from-primary to-secondary text-white'
+                        ? 'bg-gradient-to-br from-[var(--jungle-primary)] to-[var(--jungle-secondary)] text-white'
                         : 'bg-slate-800 text-slate-200'
                     }`}
                   >
@@ -349,7 +349,7 @@ export function CopilotChat() {
                 <button
                   onClick={handleSend}
                   disabled={!input.trim() || isLoading}
-                  className="bg-gradient-to-br from-primary to-secondary p-2 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-gradient-to-br from-[var(--jungle-primary)] to-[var(--jungle-secondary)] p-2 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Send className="w-5 h-5 text-white" />
                 </button>
@@ -361,3 +361,5 @@ export function CopilotChat() {
     </>
   );
 }
+
+

@@ -2,15 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { useChatPreference } from '@/context/ChatPreferenceContext';
 import { api, getErrorMessage } from '@/lib/api';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/Card';
-import { User, Mail, Lock, ShieldAlert, ArrowLeft, LogOut, Save, Trash2, MessageSquare, Mic } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import Footer from '@/components/Footer';
 
 export default function ProfilePage() {
   const { user, logout } = useAuth();
@@ -55,10 +52,10 @@ export default function ProfilePage() {
   const handleUpdateEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
-
+    
     setError(null);
     setSuccessMessage(null);
-
+    
     if (!email.trim() || !currentPassword) {
       setError('Email and current password are required');
       return;
@@ -79,20 +76,20 @@ export default function ProfilePage() {
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
-
+    
     setError(null);
     setSuccessMessage(null);
-
+    
     if (!currentPassword || !newPassword || !confirmPassword) {
       setError('All password fields are required');
       return;
     }
-
+    
     if (newPassword.length < 8) {
       setError('New password must be at least 8 characters');
       return;
     }
-
+    
     if (newPassword !== confirmPassword) {
       setError('New passwords do not match');
       return;
@@ -112,345 +109,256 @@ export default function ProfilePage() {
     }
   };
 
-  const handleDeleteAccount = async () => {
-    if (!user || !deletePassword) return;
-
+  const handleDeleteAccount = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
+    
     setError(null);
     setSuccessMessage(null);
+    
+    if (!deletePassword) {
+      setError('Password is required to delete account');
+      return;
+    }
+
+    if (!window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+      return;
+    }
 
     try {
       setIsDeletingAccount(true);
       await api.deleteAccount(user.id, deletePassword);
-      alert('Account deleted successfully');
       logout();
-      router.push('/signin');
     } catch (err) {
       setError(getErrorMessage(err));
+    } finally {
       setIsDeletingAccount(false);
     }
   };
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-background text-foreground relative overflow-hidden pb-20">
-        {/* Background Gradients */}
-        <div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-10">
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl opacity-50 animate-pulse-slow"></div>
-          <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-secondary/20 rounded-full blur-3xl opacity-50 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
-        </div>
-
-        <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-900/80 backdrop-blur-xl mb-8">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className="min-h-screen flex flex-col relative">
+        {/* Jungle Header */}
+        <header className="glass-effect border-b-2 border-[var(--jungle-light)] animate-slideIn">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
             <div className="flex justify-between items-center">
-              <div className="flex items-center gap-3">
-                <Button variant="ghost" size="icon" onClick={() => router.push('/tasks')}>
-                  <ArrowLeft className="w-5 h-5" />
-                </Button>
-                <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
-                  Profile Settings
+              <div className="flex items-center gap-3 group">
+                <span className="text-5xl group-hover:scale-110 transition-transform">🌳</span>
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-[var(--jungle-dark)] to-[var(--jungle-secondary)] bg-clip-text text-transparent">
+                  Jungle Profile
                 </h1>
               </div>
-              <Button variant="destructive" size="sm" onClick={logout} className="gap-2">
-                <LogOut className="w-4 h-4" />
-                <span className="hidden sm:inline">Logout</span>
-              </Button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => router.push('/tasks')}
+                  className="px-5 py-3 text-sm font-semibold text-[var(--jungle-secondary)] hover:bg-white rounded-xl transition-all"
+                >
+                  <span>📋</span> Tasks
+                </button>
+                <button
+                  onClick={logout}
+                  className="px-5 py-3 text-sm font-semibold text-red-600 hover:bg-red-50 rounded-xl transition-all"
+                >
+                  <span>🚪</span> Logout
+                </button>
+              </div>
             </div>
           </div>
         </header>
 
-        <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <AnimatePresence>
-            {error && (
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="p-4 bg-destructive/10 text-destructive rounded-xl border border-destructive/20"
-              >
-                {error}
-              </motion.div>
-            )}
-
-            {successMessage && (
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="p-4 bg-green-500/10 text-green-500 rounded-xl border border-green-500/20"
-              >
-                {successMessage}
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {isLoadingProfile ? (
-            <div className="flex justify-center items-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <main className="flex-1 px-4 py-12 max-w-4xl mx-auto w-full">
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border-2 border-red-200 text-red-700 rounded-xl animate-slideIn">
+              <span className="font-semibold">⚠️ {error}</span>
             </div>
-          ) : (
-            <>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-              >
-                <Card>
-                  <CardHeader>
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="p-2 bg-primary/10 rounded-lg">
-                        <MessageSquare className="w-5 h-5 text-primary" />
-                      </div>
-                      <CardTitle>Chat Preference</CardTitle>
-                    </div>
-                    <CardDescription>Choose which chat interface you prefer to use.</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div 
-                      onClick={() => setChatType('custom')}
-                      className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
-                        chatType === 'custom' 
-                          ? 'border-primary bg-primary/10 shadow-lg shadow-primary/20' 
-                          : 'border-slate-700 hover:border-slate-600 bg-slate-800/50'
-                      }`}
-                    >
-                      <div className="flex items-start gap-4">
-                        <div className={`p-3 rounded-lg ${chatType === 'custom' ? 'bg-primary/20' : 'bg-slate-700/50'}`}>
-                          <Mic className={`w-6 h-6 ${chatType === 'custom' ? 'text-primary' : 'text-slate-400'}`} />
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <h3 className={`font-semibold ${chatType === 'custom' ? 'text-primary' : 'text-slate-200'}`}>
-                              Custom Chat with Voice
-                            </h3>
-                            {chatType === 'custom' && (
-                              <span className="px-2 py-0.5 text-xs bg-primary text-white rounded-full">Active</span>
-                            )}
-                          </div>
-                          <p className="text-sm text-slate-400">
-                            Use our custom chat interface with voice recognition support. Perfect for hands-free task management.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div 
-                      onClick={() => setChatType('default')}
-                      className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
-                        chatType === 'default' 
-                          ? 'border-primary bg-primary/10 shadow-lg shadow-primary/20' 
-                          : 'border-slate-700 hover:border-slate-600 bg-slate-800/50'
-                      }`}
-                    >
-                      <div className="flex items-start gap-4">
-                        <div className={`p-3 rounded-lg ${chatType === 'default' ? 'bg-primary/20' : 'bg-slate-700/50'}`}>
-                          <MessageSquare className={`w-6 h-6 ${chatType === 'default' ? 'text-primary' : 'text-slate-400'}`} />
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <h3 className={`font-semibold ${chatType === 'default' ? 'text-primary' : 'text-slate-200'}`}>
-                              Default CopilotKit Chat
-                            </h3>
-                            {chatType === 'default' && (
-                              <span className="px-2 py-0.5 text-xs bg-primary text-white rounded-full">Active</span>
-                            )}
-                          </div>
-                          <p className="text-sm text-slate-400">
-                            Use the standard CopilotKit popup interface with text-based interactions.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-              >
-                <Card>
-                  <CardHeader>
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="p-2 bg-primary/10 rounded-lg">
-                        <Mail className="w-5 h-5 text-primary" />
-                      </div>
-                      <CardTitle>Update Email</CardTitle>
-                    </div>
-                    <CardDescription>Change your email address associated with this account.</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <form onSubmit={handleUpdateEmail} className="space-y-4">
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-300">Email Address</label>
-                        <Input
-                          type="email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          disabled={isUpdatingEmail}
-                          icon={<User className="w-4 h-4" />}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-300">Current Password</label>
-                        <Input
-                          type="password"
-                          value={currentPassword}
-                          onChange={(e) => setCurrentPassword(e.target.value)}
-                          disabled={isUpdatingEmail}
-                          placeholder="Required to change email"
-                          icon={<Lock className="w-4 h-4" />}
-                        />
-                      </div>
-                      <Button type="submit" disabled={isUpdatingEmail} className="w-full gap-2">
-                        {isUpdatingEmail ? (
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                        ) : (
-                          <Save className="w-4 h-4" />
-                        )}
-                        {isUpdatingEmail ? 'Updating...' : 'Update Email'}
-                      </Button>
-                    </form>
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-              >
-                <Card>
-                  <CardHeader>
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="p-2 bg-primary/10 rounded-lg">
-                        <Lock className="w-5 h-5 text-primary" />
-                      </div>
-                      <CardTitle>Change Password</CardTitle>
-                    </div>
-                    <CardDescription>Ensure your account is secure with a strong password.</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <form onSubmit={handleChangePassword} className="space-y-4">
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-300">Current Password</label>
-                        <Input
-                          type="password"
-                          value={currentPassword}
-                          onChange={(e) => setCurrentPassword(e.target.value)}
-                          disabled={isChangingPassword}
-                          icon={<Lock className="w-4 h-4" />}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-300">New Password</label>
-                        <Input
-                          type="password"
-                          value={newPassword}
-                          onChange={(e) => setNewPassword(e.target.value)}
-                          disabled={isChangingPassword}
-                          placeholder="Min 8 characters"
-                          icon={<Lock className="w-4 h-4" />}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-300">Confirm New Password</label>
-                        <Input
-                          type="password"
-                          value={confirmPassword}
-                          onChange={(e) => setConfirmPassword(e.target.value)}
-                          disabled={isChangingPassword}
-                          icon={<Lock className="w-4 h-4" />}
-                        />
-                      </div>
-                      <Button type="submit" disabled={isChangingPassword} className="w-full gap-2">
-                        {isChangingPassword ? (
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                        ) : (
-                          <Save className="w-4 h-4" />
-                        )}
-                        {isChangingPassword ? 'Changing...' : 'Change Password'}
-                      </Button>
-                    </form>
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-              >
-                <Card className="border-destructive/20 bg-destructive/5">
-                  <CardHeader>
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="p-2 bg-destructive/10 rounded-lg">
-                        <ShieldAlert className="w-5 h-5 text-destructive" />
-                      </div>
-                      <CardTitle className="text-destructive">Danger Zone</CardTitle>
-                    </div>
-                    <CardDescription>
-                      Once you delete your account, there is no going back. All your tasks will be permanently deleted.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    {!showDeleteConfirm ? (
-                      <Button
-                        variant="destructive"
-                        onClick={() => setShowDeleteConfirm(true)}
-                        className="w-full gap-2"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                        Delete Account
-                      </Button>
-                    ) : (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        className="space-y-4"
-                      >
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium text-destructive">
-                            Enter your password to confirm deletion
-                          </label>
-                          <Input
-                            type="password"
-                            value={deletePassword}
-                            onChange={(e) => setDeletePassword(e.target.value)}
-                            disabled={isDeletingAccount}
-                            className="border-destructive/30 focus:border-destructive"
-                            icon={<Lock className="w-4 h-4 text-destructive" />}
-                          />
-                        </div>
-                        <div className="flex gap-3">
-                          <Button
-                            variant="destructive"
-                            onClick={handleDeleteAccount}
-                            disabled={!deletePassword || isDeletingAccount}
-                            className="flex-1 gap-2"
-                          >
-                            {isDeletingAccount ? 'Deleting...' : 'Yes, Delete My Account'}
-                          </Button>
-                          <Button
-                            variant="secondary"
-                            onClick={() => {
-                              setShowDeleteConfirm(false);
-                              setDeletePassword('');
-                            }}
-                            disabled={isDeletingAccount}
-                            className="flex-1"
-                          >
-                            Cancel
-                          </Button>
-                        </div>
-                      </motion.div>
-                    )}
-                  </CardContent>
-                </Card>
-              </motion.div>
-            </>
           )}
+
+          {successMessage && (
+            <div className="mb-6 p-4 bg-green-50 border-2 border-green-200 text-green-700 rounded-xl animate-slideIn">
+              <span className="font-semibold">✅ {successMessage}</span>
+            </div>
+          )}
+
+          {/* Chat Preference Section */}
+          <div className="mb-8 jungle-card p-6 animate-fadeIn">
+            <h2 className="text-2xl font-bold text-[var(--jungle-dark)] mb-2 flex items-center gap-2">
+              <span>💬</span> Chat Preference
+            </h2>
+            <p className="text-gray-600 mb-6">Choose your preferred chat interface</p>
+            
+            <div className="grid md:grid-cols-2 gap-4">
+              <button
+                onClick={() => setChatType('custom')}
+                className={`jungle-card p-6 text-left transition-all border-2 ${
+                  chatType === 'custom'
+                    ? 'border-[var(--jungle-primary)] bg-[var(--jungle-light)]/20'
+                    : 'border-[var(--jungle-light)] hover:border-[var(--jungle-secondary)]'
+                }`}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-4xl">🎤</span>
+                  <h3 className="text-lg font-bold text-[var(--jungle-dark)]">Custom Chat with Voice</h3>
+                </div>
+                <p className="text-sm text-gray-600">
+                  Floating chat button with voice recognition support
+                </p>
+                {chatType === 'custom' && (
+                  <div className="mt-3 text-[var(--jungle-primary)] font-semibold text-sm">
+                    ✓ Currently Active
+                  </div>
+                )}
+              </button>
+
+              <button
+                onClick={() => setChatType('default')}
+                className={`jungle-card p-6 text-left transition-all border-2 ${
+                  chatType === 'default'
+                    ? 'border-[var(--jungle-primary)] bg-[var(--jungle-light)]/20'
+                    : 'border-[var(--jungle-light)] hover:border-[var(--jungle-secondary)]'
+                }`}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-4xl">💬</span>
+                  <h3 className="text-lg font-bold text-[var(--jungle-dark)]">Default CopilotKit Chat</h3>
+                </div>
+                <p className="text-sm text-gray-600">
+                  Standard CopilotKit popup interface
+                </p>
+                {chatType === 'default' && (
+                  <div className="mt-3 text-[var(--jungle-primary)] font-semibold text-sm">
+                    ✓ Currently Active
+                  </div>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Update Email */}
+          <div className="mb-8 jungle-card p-6 animate-fadeIn">
+            <h2 className="text-2xl font-bold text-[var(--jungle-dark)] mb-2 flex items-center gap-2">
+              <span>📧</span> Update Email
+            </h2>
+            <form onSubmit={handleUpdateEmail} className="space-y-4 mt-4">
+              <div>
+                <label className="block text-sm font-bold text-[var(--jungle-dark)] mb-2">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="jungle-input w-full"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-[var(--jungle-dark)] mb-2">
+                  Current Password
+                </label>
+                <input
+                  type="password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  className="jungle-input w-full"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={isUpdatingEmail}
+                className="jungle-button w-full"
+              >
+                {isUpdatingEmail ? '🔄 Updating...' : '💾 Update Email'}
+              </button>
+            </form>
+          </div>
+
+          {/* Change Password */}
+          <div className="mb-8 jungle-card p-6 animate-fadeIn">
+            <h2 className="text-2xl font-bold text-[var(--jungle-dark)] mb-2 flex items-center gap-2">
+              <span>🔒</span> Change Password
+            </h2>
+            <form onSubmit={handleChangePassword} className="space-y-4 mt-4">
+              <div>
+                <label className="block text-sm font-bold text-[var(--jungle-dark)] mb-2">
+                  Current Password
+                </label>
+                <input
+                  type="password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  className="jungle-input w-full"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-[var(--jungle-dark)] mb-2">
+                  New Password
+                </label>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="jungle-input w-full"
+                  minLength={8}
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-[var(--jungle-dark)] mb-2">
+                  Confirm New Password
+                </label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="jungle-input w-full"
+                  minLength={8}
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={isChangingPassword}
+                className="jungle-button w-full"
+              >
+                {isChangingPassword ? '🔄 Changing...' : '🔑 Change Password'}
+              </button>
+            </form>
+          </div>
+
+          {/* Delete Account */}
+          <div className="jungle-card p-6 border-2 border-red-200 animate-fadeIn">
+            <h2 className="text-2xl font-bold text-red-600 mb-2 flex items-center gap-2">
+              <span>⚠️</span> Danger Zone
+            </h2>
+            <p className="text-gray-600 mb-4">Once you delete your account, there is no going back.</p>
+            <form onSubmit={handleDeleteAccount} className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-[var(--jungle-dark)] mb-2">
+                  Confirm Password to Delete
+                </label>
+                <input
+                  type="password"
+                  value={deletePassword}
+                  onChange={(e) => setDeletePassword(e.target.value)}
+                  className="jungle-input w-full"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={isDeletingAccount}
+                className="w-full px-6 py-3 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transition-all disabled:opacity-50"
+              >
+                {isDeletingAccount ? '🔄 Deleting...' : '🗑️ Delete Account'}
+              </button>
+            </form>
+          </div>
         </main>
+
+        <Footer />
       </div>
     </ProtectedRoute>
   );

@@ -297,13 +297,13 @@ function TaskPageContent({
               animate={{ opacity: 1, x: 0 }}
               className="flex-1 min-w-[200px] relative group"
             >
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--jungle-secondary)] group-focus-within:text-primary transition-colors" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-primary transition-colors" />
               <Input
                 type="text"
                 placeholder="Search tasks..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-10 bg-white border-[var(--jungle-light)] focus:bg-slate-900 transition-all"
+                className="pl-10 bg-slate-900/50 border-slate-800 focus:bg-slate-900 transition-all"
               />
             </motion.div>
 
@@ -315,13 +315,13 @@ function TaskPageContent({
               <motion.div 
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="relative flex items-center gap-2 bg-white p-1 rounded-lg border border-[var(--jungle-light)] hover:border-primary/50 hover:bg-slate-900/70 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10"
+                className="relative flex items-center gap-2 bg-slate-900/50 p-1 rounded-lg border border-slate-800 hover:border-primary/50 hover:bg-slate-900/70 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10"
               >
-                <Filter className="w-4 h-4 text-[var(--jungle-secondary)] ml-2 group-hover:text-primary transition-colors" />
+                <Filter className="w-4 h-4 text-slate-500 ml-2 group-hover:text-primary transition-colors" />
                 <select
                   value={filter}
                   onChange={(e) => setFilter(e.target.value as FilterType)}
-                  className="bg-transparent border-none text-sm text-[var(--jungle-dark)] focus:ring-0 cursor-pointer py-1.5 pr-8 pl-2 hover:text-white transition-colors"
+                  className="bg-transparent border-none text-sm text-slate-300 focus:ring-0 cursor-pointer py-1.5 pr-8 pl-2 hover:text-white transition-colors"
                 >
                   <option value="all">All Tasks</option>
                   <option value="incomplete">Incomplete</option>
@@ -342,13 +342,13 @@ function TaskPageContent({
               <motion.div 
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="relative flex items-center gap-2 bg-white p-1 rounded-lg border border-[var(--jungle-light)] hover:border-primary/50 hover:bg-slate-900/70 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10"
+                className="relative flex items-center gap-2 bg-slate-900/50 p-1 rounded-lg border border-slate-800 hover:border-primary/50 hover:bg-slate-900/70 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10"
               >
-                <ArrowUpDown className="w-4 h-4 text-[var(--jungle-secondary)] ml-2 group-hover:text-primary transition-colors" />
+                <ArrowUpDown className="w-4 h-4 text-slate-500 ml-2 group-hover:text-primary transition-colors" />
                 <select
                   value={sort}
                   onChange={(e) => setSort(e.target.value as SortType)}
-                  className="bg-transparent border-none text-sm text-[var(--jungle-dark)] focus:ring-0 cursor-pointer py-1.5 pr-8 pl-2 hover:text-white transition-colors"
+                  className="bg-transparent border-none text-sm text-slate-300 focus:ring-0 cursor-pointer py-1.5 pr-8 pl-2 hover:text-white transition-colors"
                 >
                   <option value="created_desc">Newest</option>
                   <option value="created_asc">Oldest</option>
@@ -411,6 +411,5 @@ function TaskPageContent({
           </div>
   );
 }
-
 
 

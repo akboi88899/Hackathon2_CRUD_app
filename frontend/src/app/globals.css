@@ -233,3 +233,48 @@ body::before {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--jungle-secondary);
 }
+
+/* Jungle hover effects for tasks page */
+.jungle-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(74, 124, 44, 0.15);
+  border-color: var(--jungle-secondary);
+}
+
+.jungle-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(74, 124, 44, 0.3);
+}
+
+.jungle-input:hover {
+  border-color: var(--jungle-secondary);
+  box-shadow: 0 0 0 3px rgba(74, 124, 44, 0.1);
+}
+
+.jungle-input:focus {
+  border-color: var(--jungle-primary);
+  box-shadow: 0 0 0 3px rgba(74, 124, 44, 0.2);
+  outline: none;
+}
+
+/* Task items hover effect */
+.task-item:hover {
+  background: linear-gradient(135deg, rgba(168, 213, 122, 0.1) 0%, rgba(118, 185, 71, 0.1) 100%);
+  border-color: var(--jungle-secondary);
+  transform: translateX(4px);
+}
+
+/* Select dropdowns hover */
+select.jungle-input:hover {
+  cursor: pointer;
+  background-color: rgba(168, 213, 122, 0.05);
+}
+
+/* Button transitions */
+button:hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.jungle-button:active {
+  transform: scale(0.98);
+}
